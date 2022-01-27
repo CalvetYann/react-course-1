@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 
+import { DragDropContext } from 'react-beautiful-dnd';
+
+import { v4 } from 'uuid';
+
 import List from './components/List';
 
 import './bootstrap.min.css';
-
-const item: any = {
-    id: 0,
-    title: 'Item 1',
-    description: 'Description 1'
-}
 
 const list: any = {
     id: 0,
@@ -47,7 +45,7 @@ const App = () => {
             return;
         }
 
-        const card = { id: list.length , title: title, description: description };
+        const card = { id: v4() , title: title, description: description };
         
         let listId = parseInt(id);
 
@@ -57,16 +55,55 @@ const App = () => {
         
         setTitle('');
         setDescription('');
-        setId('');
-
+        
         e.preventDefault();
+
+        console.log("Source avant", data[listId]);
     }
 
+
+    const handleDragEnd = ({destination, source} :any) => {
+        console.log("from", source);
+        console.log("to", destination);
+        if (!destination) {
+            return;
+        } 
+
+        if(destination.index === source.index && destination.droppableId === source.droppableId){
+            return;
+        }
+
+        let itemCopy;
+        data[source.droppableId].items.forEach((item :any) => {
+            if (item.id === source.index) {
+                itemCopy = item;
+            }            
+        });
+
+        console.log("itemCopy", itemCopy);
+        
+
+        const listSource = {...data[source.droppableId]};
+        const listDestination = {...data[destination.droppableId]};
+
+        console.log("listSource", listSource);
+        console.log("listDestination", listDestination);
+        
+        listSource.items.splice(source.index, 1);
+        listDestination.items.splice(destination.index, 0, itemCopy);
+
+        data[source.droppableId] = listSource;
+        data[destination.droppableId] = listDestination;
+        
+        setData([...data]);
+    }
 
     return (
         <div className='container'>
             <div className='row'>
-                {data.map((currentElement) => <List id={currentElement.id} title={currentElement.title} items={currentElement.items} />)}
+                <DragDropContext onDragEnd={handleDragEnd}>
+                    {data.map((currentElement) => <List id={currentElement.id} title={currentElement.title} items={currentElement.items} />)}
+                </DragDropContext>
             </div>
             <div className='row'>
                 <h2>Add a new element</h2>
