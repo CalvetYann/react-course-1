@@ -21,7 +21,7 @@ const List = (props :List) => {
     <div className='listContainer w-25'>
         <h5>{ title }</h5>
         <ul className='list'>
-            {items.map((currentElt) => <li className='card m-1'><Card id={currentElt.id} title={currentElt.title} description={currentElt.description} /></li>)}
+            {items.map((currentElt) => <li className='card m-1'><Card id={currentElt.id} title={currentElt.title} description={currentElt.description} listId={id} /></li>)}
         </ul>
     </div>
 
