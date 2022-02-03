@@ -7,7 +7,7 @@ interface Props {
     //addTask: (e: any) => void;
 }
 
-const InputField: React.FC<Props> = ({vars,setters, handles}: Props) => {
+const InputFieldTask: React.FC<Props> = ({vars,setters, handles}: Props) => {
   return (
     <div>
         <div className='row mb-2'>
@@ -29,8 +29,13 @@ const InputField: React.FC<Props> = ({vars,setters, handles}: Props) => {
                         <label htmlFor="priority">Priority</label>
                     </div>
                     <div className="form-floating mb-3 col-3">
-                        <select className="form-control" id='list'>
+                        <select className="form-control" id='list' value={vars.listId} onChange={(e) => setters.setListId(e.target.value)}>
                             <option value="">Select a list</option>
+                            {vars.lists.map((list: any) => {
+                                return (
+                                    <option value={list.id}>{list.title}</option>
+                                );
+                            })}
                         </select>
                         <label htmlFor="list">List</label>
                     </div>
@@ -42,24 +47,8 @@ const InputField: React.FC<Props> = ({vars,setters, handles}: Props) => {
                     <input className="btn btn-primary" type="submit" value="Submit" />
             </form>
         </div>
-        <div className="row mt-2">
-            <form onSubmit={handles.addList} className='row'>
-                <div className="row">
-                    <h3>Add a new list</h3>
-                </div>
-                <div className="row">
-                    <div className="form-floating mb-3 col-9">
-                        <input type="text" className="form-control" value={vars.listTitle} onChange={(e) => setters.setListTitle(e.target.value)} id="list" placeholder="List"/>
-                        <label htmlFor="list">List</label>
-                    </div>
-                    <div className="form-floating mb-3 col-3">
-                        <input type="submit" className="btn btn-primary w-100 h-100" value="Submit" />
-                    </div>
-                </div>
-            </form>
-        </div>
     </div>
   );
 };
 
-export default InputField;
+export default InputFieldTask;

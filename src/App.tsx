@@ -4,8 +4,9 @@ import { v4 } from 'uuid';
 import "./App.css";
 import "./bootstrap.min.css";
 
-import InputField from './components/InputField';
-import TaskList from './components/TaskList';
+import InputFieldTask from './components/InputFieldTask';
+import InputFieldList from './components/InputFieldList';
+
 import { List, Task } from './model';
 
 
@@ -16,13 +17,8 @@ const App: React.FC = () => {
         title: "List 0",
         items: [],
     };
-    const list1: List = {
-        id: v4(),
-        title: "List 1",
-        items: [],
-    };
 
-    const [lists, setLists] = useState<List[]>([list0,list1]);
+    const [lists, setLists] = useState<List[]>([list0]);
 
     const [list, setList] = useState<List>();
     const [listId, setListId] = useState<string>("");
@@ -64,6 +60,10 @@ const App: React.FC = () => {
     const addTask = (e: any) => {
         e.preventDefault();
 
+        if(!listId || !taskTitle || !assignedTo || !priority || !desc) {
+            return alert('Please fill in all fields');
+        }
+
         const newTask: Task = {
             id: v4(),
             title: taskTitle,
@@ -73,7 +73,11 @@ const App: React.FC = () => {
             desc: desc,
         }
 
-        lists[1].items.push(newTask);
+        lists.forEach(list => {
+            if(list.id === listId) {
+                list.items.push(newTask);
+            }
+        });
         
         setLists([...lists]);
 
@@ -88,6 +92,10 @@ const App: React.FC = () => {
 
     const addList = (e: any) => {
         e.preventDefault();
+
+        if(!listTitle) {
+            return alert('Please fill in all fields');
+        }
 
         const newList: List = {
             id: v4(),
@@ -107,8 +115,42 @@ const App: React.FC = () => {
 
     return (
         <div className='container'>
-            <TaskList />
-            <InputField vars={vars} setters={setters} handles={handles} />
+            {/* <ListList /> */}
+            {lists.map((list: List) => {
+                return (
+                    <div key={list.id} className='row'>
+                        <div className='col-12'>
+                            <h2>{list.title}</h2>
+                            <hr />
+                        </div>
+                        <div className='col-12'>
+                            <ul className='list-group'>
+                                {list.items.map((task: Task) => {
+                                    return (
+                                        <li key={task.id} className='list-group-item'>
+                                            <div className='row'>
+                                                <div className='col-9'>
+                                                    {task.title}
+                                                </div>
+                                                <div className='col-3'>
+                                                    {task.assignedTo}
+                                                </div>
+                                            </div>
+                                            <div className='row'>
+                                                <div className='col-12'>
+                                                    {task.desc}
+                                                </div>
+                                            </div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    </div>
+                );
+            })}
+            <InputFieldTask vars={vars} setters={setters} handles={handles} />
+            <InputFieldList vars={vars} setters={setters} handles={handles} />
         </div>
     );
 };
