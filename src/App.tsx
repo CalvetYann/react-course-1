@@ -1,139 +1,116 @@
 import React, { useState } from 'react';
-
-import { DragDropContext } from 'react-beautiful-dnd';
-
 import { v4 } from 'uuid';
 
-import List from './components/List';
+import "./App.css";
+import "./bootstrap.min.css";
 
-import './bootstrap.min.css';
+import InputField from './components/InputField';
+import TaskList from './components/TaskList';
+import { List, Task } from './model';
 
-const list: any = {
-    id: 0,
-    title: 'Title 0',
-    items: [],
-}
 
-const App = () => {
+const App: React.FC = () => {
 
-    const [data, setData] = useState([list]);
+    const list0: List = {
+        id: v4(),
+        title: "List 0",
+        items: [],
+    };
+    const list1: List = {
+        id: v4(),
+        title: "List 1",
+        items: [],
+    };
 
-    const [listTitle, setListTitle] = useState('');
+    const [lists, setLists] = useState<List[]>([list0,list1]);
 
-    const addList = () => {
-        if (listTitle !== '') {
-            const newList = {
-                id: data.length,
-                title: listTitle,
-                items: [],
-            }
-            setData([...data, newList]);
-            setListTitle('');
-        } else {
-            alert('Please enter a title');
-        }
+    const [list, setList] = useState<List>();
+    const [listId, setListId] = useState<string>("");
+    const [listTitle, setListTitle] = useState<string>("");
+    
+    const [taskId, setTaskId] = useState<string>("");
+    const [taskTitle, setTaskTitle] = useState<string>("");
+    const [assignedTo, setAssignedTo] = useState<string>("");
+    const [priority, setPriority] = useState<string>("");
+    const [completed, setCompleted] = useState<boolean>(false);
+    const [desc, setDesc] = useState<string>("");
+
+    const vars = {
+        lists,
+        list,
+        listId,
+        listTitle,
+        taskId,
+        taskTitle,
+        assignedTo,
+        priority,
+        completed,
+        desc,
     }
 
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [id, setId] = useState('');
+    const setters = {
+        setLists,
+        setList,
+        setListId,
+        setListTitle,
+        setTaskId,
+        setTaskTitle,
+        setAssignedTo,
+        setPriority,
+        setCompleted,
+        setDesc,
+    }
 
-    const handleSubmit = (e: any) => {
-        if(title === '' || description === '' || id === ''){
-            alert('Some fields are empty');
-            e.preventDefault();
-            return;
-        }
-
-        const card = { id: v4() , title: title, description: description };
-        
-        let listId = parseInt(id);
-
-        data[listId].items.push(card);
-        
-        setData([...data]);
-        
-        setTitle('');
-        setDescription('');
-        
+    const addTask = (e: any) => {
         e.preventDefault();
 
-        console.log("Source avant", data[listId]);
-    }
-
-
-    const handleDragEnd = ({destination, source} :any) => {
-        console.log("from", source);
-        console.log("to", destination);
-        if (!destination) {
-            return;
-        } 
-
-        if(destination.index === source.index && destination.droppableId === source.droppableId){
-            return;
+        const newTask: Task = {
+            id: v4(),
+            title: taskTitle,
+            assignedTo: assignedTo,
+            priority: priority,
+            completed: completed,
+            desc: desc,
         }
 
-        let itemCopy;
-        data[source.droppableId].items.forEach((item :any) => {
-            if (item.id === source.index) {
-                itemCopy = item;
-            }            
-        });
-
-        console.log("itemCopy", itemCopy);
+        lists[1].items.push(newTask);
         
+        setLists([...lists]);
 
-        const listSource = {...data[source.droppableId]};
-        const listDestination = {...data[destination.droppableId]};
+        setTaskTitle("");
+        setAssignedTo("");
+        setPriority("");
+        setDesc("");
 
-        console.log("listSource", listSource);
-        console.log("listDestination", listDestination);
-        
-        listSource.items.splice(source.index, 1);
-        listDestination.items.splice(destination.index, 0, itemCopy);
+        console.log("Task", newTask);
+        console.log("Lists", lists);
+    }
 
-        data[source.droppableId] = listSource;
-        data[destination.droppableId] = listDestination;
-        
-        setData([...data]);
+    const addList = (e: any) => {
+        e.preventDefault();
+
+        const newList: List = {
+            id: v4(),
+            title: listTitle,
+            items: [],
+        }
+        setLists([...lists, newList]);
+        setListTitle("");
+
+        console.log("List", newList);
+    }
+
+    const handles = {
+        addTask,
+        addList,
     }
 
     return (
         <div className='container'>
-            <div className='row'>
-                <DragDropContext onDragEnd={handleDragEnd}>
-                    {data.map((currentElement) => <List id={currentElement.id} title={currentElement.title} items={currentElement.items} />)}
-                </DragDropContext>
-            </div>
-            <div className='row'>
-                <h2>Add a new element</h2>
-                <form onSubmit={e => handleSubmit(e)}>
-                    <div className="form-floating mb-3">
-                        <input type="text" className="form-control" value={title} onChange={e => setTitle(e.target.value)} id="title" placeholder="Title"/>
-                        <label htmlFor="title">Title</label>
-                    </div>
-                    <div className="form-floating mb-3">
-                        <input type="text" className="form-control" value={description} onChange={e => setDescription(e.target.value)} id="item" placeholder="Item"/>
-                        <label htmlFor="item">Item</label>
-                    </div>
-                    <select className="form-control" onChange={e => setId(e.target.value)}>
-                        <option value="">Select a list</option>
-                        {data.map((currentElement) => <option value={currentElement.id}>{currentElement.title}</option>)}
-                    </select>
-                    <input className="btn btn-primary" type="submit" value="Submit" />
-                </form>
-            </div>
-            <br />
-            <div className='row'>
-                <h2>Add a new list</h2>
-                <div className="form-floating mb-3">
-                    <input type="text" className="form-control" value={listTitle} onChange={e => setListTitle(e.target.value)} id="listTitle" placeholder="Title"/>
-                    <label htmlFor="listTitle">Title</label>
-                </div>
-                <button className='btn btn-primary w-25' onClick={addList}>Add List</button>
-            </div>
+            <TaskList />
+            <InputField vars={vars} setters={setters} handles={handles} />
         </div>
     );
-}
+};
 
 export default App;
