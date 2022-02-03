@@ -10,5 +10,5 @@ export interface Task{
 export interface List {
     id: string;
     title: string;
-    items: Task[];
+    tasks: Task[];
 }

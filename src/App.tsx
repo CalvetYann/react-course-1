@@ -8,17 +8,18 @@ import InputFieldTask from './components/InputFieldTask';
 import InputFieldList from './components/InputFieldList';
 
 import { List, Task } from './model';
+import ListComponent from './components/ListComponent';
 
 
 const App: React.FC = () => {
 
-    const list0: List = {
-        id: v4(),
-        title: "List 0",
-        items: [],
-    };
+    // const list0: List = {
+    //     id: v4(),
+    //     title: "List 0",
+    //     tasks: [],
+    // };
 
-    const [lists, setLists] = useState<List[]>([list0]);
+    const [lists, setLists] = useState<List[]>([]);
 
     const [list, setList] = useState<List>();
     const [listId, setListId] = useState<string>("");
@@ -75,7 +76,7 @@ const App: React.FC = () => {
 
         lists.forEach(list => {
             if(list.id === listId) {
-                list.items.push(newTask);
+                list.tasks.push(newTask);
             }
         });
         
@@ -100,7 +101,7 @@ const App: React.FC = () => {
         const newList: List = {
             id: v4(),
             title: listTitle,
-            items: [],
+            tasks: [],
         }
         setLists([...lists, newList]);
         setListTitle("");
@@ -115,41 +116,11 @@ const App: React.FC = () => {
 
     return (
         <div className='container'>
-            {/* <ListList /> */}
-            {lists.map((list: List) => {
-                return (
-                    <div key={list.id} className='row'>
-                        <div className='col-12'>
-                            <h2>{list.title}</h2>
-                            <hr />
-                        </div>
-                        <div className='col-12'>
-                            <ul className='list-group'>
-                                {list.items.map((task: Task) => {
-                                    return (
-                                        <li key={task.id} className='list-group-item'>
-                                            <div className='row'>
-                                                <div className='col-9'>
-                                                    {task.title}
-                                                </div>
-                                                <div className='col-3'>
-                                                    {task.assignedTo}
-                                                </div>
-                                            </div>
-                                            <div className='row'>
-                                                <div className='col-12'>
-                                                    {task.desc}
-                                                </div>
-                                            </div>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    </div>
-                );
-            })}
-            <InputFieldTask vars={vars} setters={setters} handles={handles} />
+            <ListComponent vars={vars} setters={setters} />
+            {
+                lists.length > 0 && <InputFieldTask vars={vars} setters={setters} handles={handles} />                
+            }
+            {/* <InputFieldTask vars={vars} setters={setters} handles={handles} /> */}
             <InputFieldList vars={vars} setters={setters} handles={handles} />
         </div>
     );
