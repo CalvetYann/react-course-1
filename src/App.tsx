@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { v4 } from 'uuid';
+import Modal from 'react-modal';
 
 import "./App.css";
 import "./bootstrap.min.css";
@@ -9,6 +10,7 @@ import InputFieldList from './components/InputFieldList';
 
 import { List, Task } from './model';
 import ListComponent from './components/ListComponent';
+import HeaderComponent from './components/HeaderComponent';
 
 
 const App: React.FC = () => {
@@ -31,6 +33,20 @@ const App: React.FC = () => {
     const [priority, setPriority] = useState<string>("");
     const [completed, setCompleted] = useState<boolean>(false);
     const [desc, setDesc] = useState<string>("");
+
+    const [modalTaskIsOpen, setModalTaskIsOpen] = useState<boolean>(false);
+    const [modalListIsOpen, setModalListIsOpen] = useState<boolean>(false);
+
+    const customStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+        },
+    };
 
     const vars = {
         lists,
@@ -87,8 +103,7 @@ const App: React.FC = () => {
         setPriority("");
         setDesc("");
 
-        console.log("Task", newTask);
-        console.log("Lists", lists);
+        closeModalTask();
     }
 
     const addList = (e: any) => {
@@ -106,22 +121,60 @@ const App: React.FC = () => {
         setLists([...lists, newList]);
         setListTitle("");
 
-        console.log("List", newList);
+        closeModalList();
+    }
+
+    const openModalTask = () => {
+        setModalTaskIsOpen(true);
+    }
+
+    const closeModalTask = () => {
+        setModalTaskIsOpen(false);
+    }
+
+    const openModalList = () => {
+        setModalListIsOpen(true);
+    }
+
+    const closeModalList = () => {
+        setModalListIsOpen(false);
     }
 
     const handles = {
         addTask,
         addList,
+        openModalTask,
+        closeModalTask,
+        openModalList,
+        closeModalList,
     }
 
     return (
-        <div className='container'>
-            <ListComponent vars={vars} setters={setters} />
-            {
-                lists.length > 0 && <InputFieldTask vars={vars} setters={setters} handles={handles} />                
-            }
-            {/* <InputFieldTask vars={vars} setters={setters} handles={handles} /> */}
-            <InputFieldList vars={vars} setters={setters} handles={handles} />
+        <div className="App">
+            <HeaderComponent vars={vars} handles={handles} />
+            <div className='container'>
+                <ListComponent vars={vars} setters={setters} />
+
+                <Modal
+                    isOpen={modalTaskIsOpen}
+                    onRequestClose={closeModalTask}
+                    contentLabel="Task Modal"
+                    style={customStyles}
+                >
+                    <InputFieldTask vars={vars} setters={setters} handles={handles} />                
+                </Modal>
+
+                <Modal
+                    isOpen={modalListIsOpen}
+                    onRequestClose={closeModalList}
+                    contentLabel="List Modal"
+                    style={customStyles}
+                >
+                    <InputFieldList vars={vars} setters={setters} handles={handles} />
+                </Modal>
+
+                { lists.length === 0 ? <InputFieldList vars={vars} setters={setters} handles={handles} /> : null }
+            </div>
         </div>
     );
 };
