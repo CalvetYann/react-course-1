@@ -1,26 +1,15 @@
-# React course 1
+# ToDo List
 
-## Getting started
-
-- Fork project to your personal repo
-- Edit README.md with your name/surname
-- Open terminal
-
-```sh
-git clone git@github.com:<YOUR_USERNAME>/react-course-1.git
-cd react-course-1
-yarn
-yarn start
-```
+## CALVET Yann | LP WMCE
 
 ## Goals
 
 You have to create a todo list with these features:
-- Create new todo with title / description / priority / assigned to
-- Manage status (completed or not)
-- Create new list
+- Create new todo with title / description / priority / assigned to - OK
+- Manage status (completed or not) - OK
+- Create new list - OK
 - Add filters
-- Edit todo
+- Edit todo - OK
 - Move todo
 - Drag and drop todo (using [beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd))
 - List virtualization (using [react-window](https://github.com/bvaughn/react-window))

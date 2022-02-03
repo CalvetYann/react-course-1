@@ -153,15 +153,18 @@ const App: React.FC = () => {
         <div className="App">
             <HeaderComponent vars={vars} handles={handles} />
             <div className='container'>
+                { lists.length === 0 ? <InputFieldList vars={vars} setters={setters} handles={handles} /> : null }
+
                 <ListComponent vars={vars} setters={setters} />
 
-                <div className='mt-5'>
+                { lists.length !== 0 ? <div className='mt-5'>
                     Filter : <select>
                         <option value="">Everything</option>
                     </select>
-                </div>
+                </div> : null }
 
 
+                {/* MODALS  */}
                 <Modal
                     isOpen={modalTaskIsOpen}
                     onRequestClose={closeModalTask}
@@ -179,8 +182,6 @@ const App: React.FC = () => {
                 >
                     <InputFieldList vars={vars} setters={setters} handles={handles} />
                 </Modal>
-
-                { lists.length === 0 ? <InputFieldList vars={vars} setters={setters} handles={handles} /> : null }
             </div>
         </div>
     );

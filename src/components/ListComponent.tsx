@@ -38,6 +38,8 @@ const ListComponent: React.FC<Props> = ({vars, setters}: Props) => {
                                 }
                             </div>
                             <div className='card-footer'>
+                                <p>Number of tasks : {list.tasks.length}</p>
+                                <p>Number of completed tasks : {list.tasks.filter((task: any) => task.completed).length}/{list.tasks.length}</p>
                                 <button disabled={ list.tasks.length !== 0 } onClick={ () => deleteList(list.id, list.tasks.length) } type="button" className="btn btn-danger"><span className='icon'><AiFillDelete /></span></button>
                             </div>
                         </div>
