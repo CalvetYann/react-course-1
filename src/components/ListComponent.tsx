@@ -25,7 +25,7 @@ const ListComponent: React.FC<Props> = ({vars, setters}: Props) => {
             vars.lists.map((list: any) => {
 
                 return (
-                    <div className='col-3'>
+                    <div className='col-4'>
                         <div className='card'>
                             <div className='card-header'>
                                 <h3>{list.title}</h3>

@@ -89,8 +89,8 @@ const TaskComponent: React.FC<Props> = ({task, listId, vars, setters}: Props) =>
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
-                                        <h6 className='col-6'>{task.assignedTo}</h6>
-                                        <h6 className='col-6'>{task.priority}</h6>
+                                        <h6 className='col-6'>Assigned to {task.assignedTo}</h6>
+                                        <h6 className='col-6'>Priority : {task.priority}</h6>
                                     </div>
                                     <div className='row'>
                                         <p>{task.desc}</p>

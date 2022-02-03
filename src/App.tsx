@@ -155,6 +155,13 @@ const App: React.FC = () => {
             <div className='container'>
                 <ListComponent vars={vars} setters={setters} />
 
+                <div className='mt-5'>
+                    Filter : <select>
+                        <option value="">Everything</option>
+                    </select>
+                </div>
+
+
                 <Modal
                     isOpen={modalTaskIsOpen}
                     onRequestClose={closeModalTask}
