@@ -3,6 +3,8 @@ import { AiFillDelete } from 'react-icons/ai';
 import TaskComponent from './TaskComponent'
 
 import './List.css'
+import { List, Task } from '../model';
+import { Droppable } from 'react-beautiful-dnd';
 
 type Props = {
     vars: any;
@@ -13,16 +15,14 @@ const ListComponent: React.FC<Props> = ({vars, setters}: Props) => {
 
     const deleteList = (id: string, length: number) => {
         if(window.confirm("Are you sure you want to delete this list?") && length === 0) {
-            setters.setLists(vars.lists.filter((list: any) => list.id !== id));
-        } else {
-            alert("You can't delete this list, there are tasks on it!");
+            setters.setLists(vars.lists.filter((list: List) => list.id !== id));
         }
     }
 
 
     return <div className='row'>
         {
-            vars.lists.map((list: any) => {
+            vars.lists.map((list: List) => {
 
                 return (
                     <div className='col-4'>
@@ -30,16 +30,23 @@ const ListComponent: React.FC<Props> = ({vars, setters}: Props) => {
                             <div className='card-header'>
                                 <h3>{list.title}</h3>
                             </div>
-                            <div className='card-body'>
+                            <Droppable droppableId={list.id}>
                                 {
-                                    list.tasks.map((task: any) => {
-                                        return <TaskComponent task={task} listId={list.id} vars={vars} setters={setters} key={task.id} />
-                                    })
+                                    (provided) => (
+                                        <div className='card-body' ref={provided.innerRef} {...provided.droppableProps}>
+                                            {
+                                                list.tasks.map((task: Task, index: number) => {
+                                                    return <TaskComponent index={index} task={task} listId={list.id} vars={vars} setters={setters} key={task.id} />
+                                                })
+                                            }
+                                            {provided.placeholder}
+                                        </div>
+                                    )
                                 }
-                            </div>
+                            </Droppable>
                             <div className='card-footer'>
                                 <p>Number of tasks : {list.tasks.length}</p>
-                                <p>Number of completed tasks : {list.tasks.filter((task: any) => task.completed).length}/{list.tasks.length}</p>
+                                <p>Number of completed tasks : {list.tasks.filter((task: Task) => task.completed).length}/{list.tasks.length}</p>
                                 <button disabled={ list.tasks.length !== 0 } onClick={ () => deleteList(list.id, list.tasks.length) } type="button" className="btn btn-danger"><span className='icon'><AiFillDelete /></span></button>
                             </div>
                         </div>

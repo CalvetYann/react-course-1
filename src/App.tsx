@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 import Modal from 'react-modal';
 
@@ -11,15 +11,11 @@ import InputFieldList from './components/InputFieldList';
 import { List, Task } from './model';
 import ListComponent from './components/ListComponent';
 import HeaderComponent from './components/HeaderComponent';
+import FilterComponent from './components/FilterComponent';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 
 
-const App: React.FC = () => {
-
-    // const list0: List = {
-    //     id: v4(),
-    //     title: "List 0",
-    //     tasks: [],
-    // };
+const App: React.FC = () => {    
 
     const [lists, setLists] = useState<List[]>([]);
 
@@ -106,7 +102,7 @@ const App: React.FC = () => {
         closeModalTask();
     }
 
-    const addList = (e: any) => {
+    const addList = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
 
         if(!listTitle) {
@@ -149,40 +145,60 @@ const App: React.FC = () => {
         closeModalList,
     }
 
+    const onDragEnd = (result: DropResult) => {
+        const { source, destination } = result;
+
+        if (!destination) {
+            return;
+        }
+
+        if (destination.droppableId === source.droppableId && destination.index === source.index) {
+            return;
+        }
+
+        const listSource = lists.find(list => list.id === source.droppableId);
+        const listDestination = lists.find(list => list.id === destination.droppableId);
+
+        if (listSource && listDestination) {
+            const task = listSource.tasks.splice(source.index, 1)[0];
+            listDestination.tasks.splice(destination.index, 0, task);
+
+            setLists([...lists]);
+        }
+    };
+
     return (
         <div className="App">
             <HeaderComponent vars={vars} handles={handles} />
-            <div className='container'>
-                { lists.length === 0 ? <InputFieldList vars={vars} setters={setters} handles={handles} /> : null }
 
-                <ListComponent vars={vars} setters={setters} />
+            <DragDropContext onDragEnd={onDragEnd}>
 
-                { lists.length !== 0 ? <div className='mt-5'>
-                    Filter : <select>
-                        <option value="">Everything</option>
-                    </select>
-                </div> : null }
+                <div className='container'>
+                    { lists.length === 0 ? <InputFieldList vars={vars} setters={setters} handles={handles} /> : null }
+
+                    <ListComponent vars={vars} setters={setters} />
 
 
-                {/* MODALS  */}
-                <Modal
-                    isOpen={modalTaskIsOpen}
-                    onRequestClose={closeModalTask}
-                    contentLabel="Task Modal"
-                    style={customStyles}
-                >
-                    <InputFieldTask vars={vars} setters={setters} handles={handles} />                
-                </Modal>
+                    {/* MODALS  */}
+                    <Modal
+                        isOpen={modalTaskIsOpen}
+                        onRequestClose={closeModalTask}
+                        contentLabel="Task Modal"
+                        style={customStyles}
+                    >
+                        <InputFieldTask vars={vars} setters={setters} handles={handles} />                
+                    </Modal>
 
-                <Modal
-                    isOpen={modalListIsOpen}
-                    onRequestClose={closeModalList}
-                    contentLabel="List Modal"
-                    style={customStyles}
-                >
-                    <InputFieldList vars={vars} setters={setters} handles={handles} />
-                </Modal>
-            </div>
+                    <Modal
+                        isOpen={modalListIsOpen}
+                        onRequestClose={closeModalList}
+                        contentLabel="List Modal"
+                        style={customStyles}
+                    >
+                        <InputFieldList vars={vars} setters={setters} handles={handles} />
+                    </Modal>
+                </div>
+            </DragDropContext>
         </div>
     );
 };

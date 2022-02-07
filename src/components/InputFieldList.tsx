@@ -4,7 +4,6 @@ type Props ={
     vars: any;
     setters: any;
     handles: any;
-    //addTask: (e: any) => void;
 }
 
 const InputFieldList: React.FC<Props> = ({vars,setters, handles}: Props) => {

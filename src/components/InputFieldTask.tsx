@@ -1,10 +1,10 @@
 import React from 'react';
+import { List } from '../model';
 
 type Props = {
     vars: any;
     setters: any;
     handles: any;
-    //addTask: (e: any) => void;
 }
 
 const InputFieldTask: React.FC<Props> = ({vars,setters, handles}: Props) => {
@@ -31,7 +31,7 @@ const InputFieldTask: React.FC<Props> = ({vars,setters, handles}: Props) => {
                         <div className="form-floating mb-3 col-3">
                             <select className="form-control" id='list' value={vars.listId} onChange={(e) => setters.setListId(e.target.value)}>
                                 <option value="">Select a list</option>
-                                {vars.lists.map((list: any) => {
+                                {vars.lists.map((list: List) => {
                                     return (
                                         <option value={list.id}>{list.title}</option>
                                     );
