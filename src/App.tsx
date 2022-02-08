@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { v4 } from 'uuid';
 import Modal from 'react-modal';
 
@@ -19,7 +19,6 @@ const App: React.FC = () => {
 
     const [lists, setLists] = useState<List[]>([]);
 
-    const [list, setList] = useState<List>();
     const [listId, setListId] = useState<string>("");
     const [listTitle, setListTitle] = useState<string>("");
     
@@ -102,7 +101,7 @@ const App: React.FC = () => {
         closeModalTask();
     }
 
-    const addList = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const addList = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if(!listTitle) {

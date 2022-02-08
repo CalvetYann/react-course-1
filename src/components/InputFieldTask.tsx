@@ -1,10 +1,10 @@
 import React from 'react';
-import { List } from '../model';
+import { Handles, List, Setters, Vars } from '../model';
 
 type Props = {
-    vars: any;
-    setters: any;
-    handles: any;
+    vars: Vars;
+    setters: Setters;
+    handles: Handles;
 }
 
 const InputFieldTask: React.FC<Props> = ({vars,setters, handles}: Props) => {

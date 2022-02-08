@@ -1,8 +1,9 @@
 import React from 'react';
+import { Handles, Vars } from '../model';
 
 type Props = {
-    vars: any;
-    handles: any;
+    vars: Vars;
+    handles: Handles;
 }
 
 const HeaderComponent = ({vars, handles}: Props) => {

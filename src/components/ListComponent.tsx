@@ -3,12 +3,12 @@ import { AiFillDelete } from 'react-icons/ai';
 import TaskComponent from './TaskComponent'
 
 import './List.css'
-import { List, Task } from '../model';
+import { List, Setters, Task, Vars } from '../model';
 import { Droppable } from 'react-beautiful-dnd';
 
 type Props = {
-    vars: any;
-    setters: any;
+    vars: Vars;
+    setters: Setters;
 }
 
 const ListComponent: React.FC<Props> = ({vars, setters}: Props) => {

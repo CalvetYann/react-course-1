@@ -1,16 +1,17 @@
 import React from 'react';
+import { Handles, Setters, Vars } from '../model';
 
 type Props ={
-    vars: any;
-    setters: any;
-    handles: any;
+    vars: Vars;
+    setters: Setters;
+    handles: Handles;
 }
 
 const InputFieldList: React.FC<Props> = ({vars,setters, handles}: Props) => {
     return (
         <div>
             <div className="row mt-2">
-                <form onSubmit={handles.addList} className='row'>
+                <form onSubmit={(e) => handles.addList(e)} className='row'>
                     <div className="row">
                         <h3>Add a new list</h3>
                     </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { AiFillDelete, AiOutlineEdit } from 'react-icons/ai';
 import { MdDone } from 'react-icons/md';
-import { Task, List } from '../model';
+import { Task, List, Vars, Setters } from '../model';
 
 
 import './Task.css';
@@ -11,8 +11,8 @@ type Props = {
     index: number;
     task: Task;
     listId: string;
-    vars: any;
-    setters: any;
+    vars: Vars;
+    setters: Setters;
 }
 
 const TaskComponent: React.FC<Props> = ({index,task, listId, vars, setters}: Props) => {
@@ -69,7 +69,7 @@ const TaskComponent: React.FC<Props> = ({index,task, listId, vars, setters}: Pro
                 (provided) => (
                     <div className='row' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                         <form onSubmit={(e) => { editTask(e, task.id) }}>
-                            <div className={`card p-0 mt-2 ${task.completed ? "alert-success" : edit ? "alert-warning" : ""}`}>
+                            <div className={`card task-card p-0 mt-2 ${task.completed ? "alert-success" : edit ? "alert-warning" : ""}`}>
 
                                 {
                                     edit ? (
