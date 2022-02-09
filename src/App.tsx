@@ -75,7 +75,6 @@ const App: React.FC = () => {
     }
 
     useEffect(() => {
-        console.log("useEffect", filterStatus);
         const filterTasks = () => {
             switch (filterStatus) {
                 case 'complete':
