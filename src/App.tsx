@@ -32,6 +32,9 @@ const App: React.FC = () => {
     const [modalTaskIsOpen, setModalTaskIsOpen] = useState<boolean>(false);
     const [modalListIsOpen, setModalListIsOpen] = useState<boolean>(false);
 
+    const [filterStatus, setFilterStatus] = useState<string>("");
+    const [filteredLists, setFilteredLists] = useState<List[]>([]);
+
     const customStyles = {
         content: {
             top: '50%',
@@ -45,7 +48,6 @@ const App: React.FC = () => {
 
     const vars = {
         lists,
-        list,
         listId,
         listTitle,
         taskId,
@@ -54,11 +56,12 @@ const App: React.FC = () => {
         priority,
         completed,
         desc,
+        filterStatus,
+        filteredLists
     }
 
     const setters = {
         setLists,
-        setList,
         setListId,
         setListTitle,
         setTaskId,
@@ -67,9 +70,39 @@ const App: React.FC = () => {
         setPriority,
         setCompleted,
         setDesc,
+        setFilterStatus,
+        setFilteredLists
     }
 
-    const addTask = (e: any) => {
+    useEffect(() => {
+        console.log("useEffect", filterStatus);
+        const filterTasks = () => {
+            switch (filterStatus) {
+                case 'complete':
+                    setFilteredLists(lists.map(list => {
+                        return {
+                            ...list,
+                            tasks: list.tasks.filter(task => task.completed)
+                        }
+                    }));
+                    break;
+                case 'incomplete':
+                    setFilteredLists(lists.map(list => {
+                        return {
+                            ...list,
+                            tasks: list.tasks.filter(task => !task.completed)
+                        }
+                    }));
+                    break;
+                default:
+                    setFilteredLists(lists);
+                    break;
+            }
+        }
+        filterTasks();
+    }, [filterStatus, lists]);
+
+    const addTask = (e: FormEvent<HTMLFormElement>) => {        
         e.preventDefault();
 
         if(!listId || !taskTitle || !assignedTo || !priority || !desc) {
@@ -176,7 +209,8 @@ const App: React.FC = () => {
                     { lists.length === 0 ? <InputFieldList vars={vars} setters={setters} handles={handles} /> : null }
 
                     <ListComponent vars={vars} setters={setters} />
-
+                    <br />
+                    { lists.length !== 0 ? <FilterComponent setters={setters} /> : null }
 
                     {/* MODALS  */}
                     <Modal

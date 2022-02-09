@@ -25,6 +25,8 @@ export interface Vars {
     priority: string;
     completed: boolean;
     desc: string;
+    filterStatus: string;
+    filteredLists: List[];
 }
 
 export interface Setters {
@@ -37,6 +39,8 @@ export interface Setters {
     setPriority: (priority: string) => void;
     setCompleted: (completed: boolean) => void;
     setDesc: (desc: string) => void;
+    setFilterStatus: (filterStatus: string) => void;
+    setFilteredLists: (lists: List[]) => void;
 }
 
 export interface Handles {

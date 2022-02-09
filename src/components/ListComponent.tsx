@@ -22,7 +22,7 @@ const ListComponent: React.FC<Props> = ({vars, setters}: Props) => {
 
     return <div className='row'>
         {
-            vars.lists.map((list: List) => {
+            vars.filteredLists.map((list: List) => {
 
                 return (
                     <div className='col-4'>
